@@ -1,13 +1,13 @@
 import mongoose, { Model, model } from "mongoose";
 
 const studentSchema = new mongoose.Schema({
-    name: { type: String, unique: true, trim: true},
-    lastName: { type: String, unique: true, trim: true},
+    name: { type: String,  trim: true},
+    lastName: { type: String,  trim: true},
     rut: { type: String, unique: true, trim: true}, 
-    age: { type: Number, unique: true, trim: true},
-    classroom: { type: String, unique: true, trim: true},
-    gender: { type: String, unique: true, trim: true},
-    family: { type: String, unique: true, trim: true}, 
+    age: { type: Number,  trim: true},
+    classroom: { type: String,  trim: true},
+    gender: { type: String,  trim: true},
+    family: { type: String,  trim: true}, 
 })
 
 const Students = model("Students",studentSchema)

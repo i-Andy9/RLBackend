@@ -1,7 +1,7 @@
 import Students from "../Models/studentsModel.js";
 
 const getPage =(req,res)=>{
-    console.log("hola"); 
+    
     res.json({msg:'aaa',code:400})
 } 
 const addStudents = async (req,res)=>{ 
@@ -47,20 +47,125 @@ const addStudents = async (req,res)=>{
         students: studentsSave,
         });
     } catch (error) {
-        throw(error)
+        res.send({ msg: `${error.message}` });
     }
 }
-const getStudents =()=>{
-    console.log("hola"); 
+const getStudents = async (req,res)=>{
+     try {
+        
+        const listStudents = await Students.find().select('-_id,-__v')
+
+        return res.status(200).json({
+            msg:'Lista de estudiantes registrados',
+            listStudents,
+        })
+
+     } catch (error) {
+        res.send({ msg: `${error.message}` });
+     }
 }
-const getStudent =()=>{
-    console.log("hola"); 
+const getStudent = async (req,res)=>{
+    try {
+    
+        const { rut } = req.params;
+        
+        if ([null, undefined].includes(rut) || rut.length < 7) {
+        res.status(400).json({
+            msg: "Sintaxis no valida",
+            status: "bad request",
+        });
+        }
+
+        //prevent duplicate students
+        
+        const studentsExist = await Students.findOne({ rut }).select("-_id -__v");
+        
+        if(!studentsExist) {
+            const error = new Error ("El rut ingresado no se ecnuentra registrado")
+
+            return res.status(404).json({ msg: error.message });
+        }
+
+        return res.status(200).json({
+            msg: "Estudiante encontrado correctamente",
+            studentsExist,
+        });
+
+    } catch (error) {
+        res.send({ msg: `${error.message}` });
+    }
 }
-const editStudent =()=>{
-    console.log("hola"); 
+const editStudent = async (req,res)=>{
+    try {
+        const { rut } = req.params
+        const {name,lastName,age,classroom,gender,family,} = req.body
+
+        if ([null, undefined].includes(rut) || rut.length <7 ) {
+        
+        res.status(400).json({ 
+            msg: "Sintaxis no valida", 
+            status: "bad request" });
+            return
+        }
+ 
+        const studentsExist = await Students.findOne({ rut }) 
+
+        if(!studentsExist){
+            res.status(404).json({
+                msg:` Error, no se han encontrado usuarios con este rut,${rut}`
+            })
+            return
+        }
+
+        studentsExist.name = name || studentsExist.name
+        studentsExist.lastName = lastName || studentsExist.lastName
+        studentsExist.age = age || studentsExist.age
+        studentsExist.classroom = classroom ||studentsExist.classroom
+        studentsExist.gender = gender ||studentsExist.gender
+        studentsExist.family = family || studentsExist.family
+
+        const studentUpadeted= await studentsExist.save()
+
+        res.status(200).json({
+            msg:`Se ha editado correctamente el registro del estudiante con rut ${rut}`,
+            studentUpadeted
+        })
+        
+    } catch (error) {
+        res.send({ msg: `${error.message}` });
+    }
 }
-const deleteStudent =()=>{
-    console.log("hola"); 
+const deleteStudent =async (req, res) => {
+    try {
+        const { rut } = req.params 
+
+        if ([null, undefined].includes(rut) || rut.length <7 ) {
+        
+        res.status(400).json({ 
+            msg: "Sintaxis no valida", 
+            status: "bad request" });
+            return
+        }
+
+        const studentsExist = await Students.findOne({ rut })
+
+        if(!studentsExist){
+            res.status(404).json({
+                msg:` Error, no se han encontrado usuarios con este rut,${rut}`
+            })
+            return
+        }
+
+        await Students.findByIdAndDelete(studentsExist._id)
+
+        return res.status(200).json({ 
+            msg: `Se ha eliminado correctamente el registro con rut ${rut}`,
+        })
+        
+    } catch (error) {
+        res.send({ msg: `${error.message}` });
+        
+    }
 } 
 
 export {
