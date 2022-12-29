@@ -1,6 +1,6 @@
 import Students from "../Models/studentsModel.js";
 
-const getPage =(req,res)=>{
+const getPageStudents =(req,res)=>{
     
     res.json({msg:'aaa',code:400})
 } 
@@ -53,7 +53,7 @@ const addStudents = async (req,res)=>{
 const getStudents = async (req,res)=>{
      try {
         
-        const listStudents = await Students.find().select('-_id,-__v')
+        const listStudents = await Students.find().select('-_id -__v')
 
         return res.status(200).json({
             msg:'Lista de estudiantes registrados',
@@ -111,10 +111,9 @@ const editStudent = async (req,res)=>{
         const studentsExist = await Students.findOne({ rut }) 
 
         if(!studentsExist){
-            res.status(404).json({
+            return res.status(404).json({
                 msg:` Error, no se han encontrado usuarios con este rut,${rut}`
-            })
-            return
+            }) 
         }
 
         studentsExist.name = name || studentsExist.name
@@ -124,11 +123,14 @@ const editStudent = async (req,res)=>{
         studentsExist.gender = gender ||studentsExist.gender
         studentsExist.family = family || studentsExist.family
 
-        const studentUpadeted= await studentsExist.save()
+        const studentUpdated= await studentsExist.save()
+
+        delete studentUpdated.__v
+        delete studentUpdated._id
 
         res.status(200).json({
             msg:`Se ha editado correctamente el registro del estudiante con rut ${rut}`,
-            studentUpadeted
+            studentUpdated
         })
         
     } catch (error) {
@@ -141,19 +143,18 @@ const deleteStudent =async (req, res) => {
 
         if ([null, undefined].includes(rut) || rut.length <7 ) {
         
-        res.status(400).json({ 
-            msg: "Sintaxis no valida", 
-            status: "bad request" });
-            return
+            return res.status(400).json({ 
+                msg: "Sintaxis no valida", 
+                status: "bad request" 
+            }); 
         }
 
         const studentsExist = await Students.findOne({ rut })
 
         if(!studentsExist){
-            res.status(404).json({
+            return res.status(404).json({
                 msg:` Error, no se han encontrado usuarios con este rut,${rut}`
-            })
-            return
+            }) 
         }
 
         await Students.findByIdAndDelete(studentsExist._id)
@@ -169,7 +170,7 @@ const deleteStudent =async (req, res) => {
 } 
 
 export {
-    getPage,
+    getPageStudents,
     getStudents,
 addStudents,
 getStudent,

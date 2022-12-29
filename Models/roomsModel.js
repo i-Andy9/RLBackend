@@ -1,11 +1,12 @@
 import mongoose, { Model, model } from "mongoose";
 
 const roomSchema = new mongoose.Schema({
-    name: { type: String, unique: true, trim: true},
-    details: { type: String, unique: true, trim: true},
-    list: { type: String, unique: true, trim: true}
+    code: { type: String, unique: true, trim: true},
+    name: { type: String,  trim: true},
+    details: { type: String,  trim: true},
+    list: { type: String, trim: true}
 })
 
-const rooms = model("rooms",roomSchema)
+const Rooms = model("Rooms",roomSchema)
 
-export default rooms
+export default Rooms

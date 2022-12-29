@@ -1,5 +1,5 @@
 import express from 'express'
-import { getPage,
+import { getPageStudents,
     getStudents,
 addStudents,
 getStudent,
@@ -10,7 +10,7 @@ const studentsRoutes = express.Router()
 
 studentsRoutes
     .route("/test")
-    .get(getPage)
+    .get(getPageStudents)
 
 studentsRoutes
     .route("/")
