@@ -7,6 +7,7 @@ import {addAdmin,
     loadOutAdmin
 } from "../Controllers/adminController.js"
 import { checkAuth } from "../Middleware/authSesion.js";
+import { CheckSesion } from "../Middleware/CheckSesion.js";
 
 const adminRoutes = express.Router()
 
@@ -16,9 +17,9 @@ adminRoutes
 
 adminRoutes
     .route("/")
-    .get(getAdmins)
-    .post(addAdmin)
-    .delete(deleteAdmin);
+    .get(checkAuth,CheckSesion,getAdmins)
+    .post(checkAuth,CheckSesion,addAdmin)
+    .delete(checkAuth,CheckSesion,deleteAdmin);
 adminRoutes
     .route("/login")
     .post(checkAuth,signInAdmin)
