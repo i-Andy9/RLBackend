@@ -11,11 +11,10 @@ const addRooms = async (req,res)=>{
             req.body === undefined ||
             req.body === null
             ) {
-                res.json({
+            return res.json({
                 msg: `No hay informacion`,
                 code: 204,
-            });
-            return;
+            }); 
         }
         if (Object.keys(req.body).length < 4) {
             res.json({

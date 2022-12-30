@@ -7,6 +7,8 @@ import {
   getRooms,
   getpagerooms,
 } from "../Controllers/roomsController.js";
+import { checkAuth } from "../Middleware/authSesion.js";
+import { CheckSesion } from "../Middleware/CheckSesion.js";
 
 const roomRoutes = Express.Router();
 
@@ -17,12 +19,12 @@ roomRoutes
 roomRoutes
     .route("/")
     .get(getRooms)
-    .post(addRooms);
+    .post(checkAuth,CheckSesion,addRooms);
 
 roomRoutes
     .route("/:code")
     .get(getRoom)
-    .put(editRoom)
-    .delete(deleteRoom);
+    .put(checkAuth,CheckSesion,editRoom)
+    .delete(checkAuth,CheckSesion,deleteRoom);
 
 export default roomRoutes;

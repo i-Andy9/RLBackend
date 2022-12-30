@@ -5,6 +5,8 @@ addStudents,
 getStudent,
 editStudent,
 deleteStudent, } from '../Controllers/studentsController.js';
+import { checkAuth } from '../Middleware/authSesion.js';
+import { CheckSesion } from '../Middleware/CheckSesion.js';
 
 const studentsRoutes = express.Router()
 
@@ -15,13 +17,13 @@ studentsRoutes
 studentsRoutes
     .route("/")
     .get(getStudents)
-    .post(addStudents)
+    .post(checkAuth,CheckSesion,addStudents)
 
 studentsRoutes
     .route("/:rut")
     .get(getStudent)
-    .put(editStudent)
-    .delete(deleteStudent)
+    .put(checkAuth,CheckSesion,editStudent)
+    .delete(checkAuth,CheckSesion,deleteStudent)
 
 
     export default studentsRoutes;

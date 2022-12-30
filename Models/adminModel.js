@@ -1,11 +1,12 @@
 import mongoose, { Model, model } from "mongoose";
 
 const adminSchema = new mongoose.Schema({
-    name: { type: String, unique: true, trim: true},
-    details: { type: String, unique: true, trim: true},
-    list: { type: String, unique: true, trim: true}
+    rut: { type: String, unique: true, trim: true},
+    password: { type: String,  trim: true},
+    jwt: { type: String,   trim: true},
+    actsesion:{ type: Boolean,  default: false },
 })
 
-const admins = model("admins",adminSchema)
+const Admins = model("Admins",adminSchema)
 
-export default admins
+export default Admins
