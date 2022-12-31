@@ -11,6 +11,20 @@ const app = express();
 app.use(express.json())// acepta estructura json  
 dotenv.config()// read .env  
 dbConection()  
+
+const dominiopermitido = ['http://127.0.0.1:5173','http://localhost', 'https://abtfrontendaz.netlify.app/']
+const corsOption = {
+    origin : function(origin, callback) {
+        if(dominiopermitido.indexOf(origin) !== -1) {
+            callback(null,true)
+        }else{
+            callback(new Error('No permitido por COrs'))
+        }
+    }
+}
+
+app.use(cors(corsOption))
+
 const PORT = process.env.PORT || 4000 // port of server or default
 
 app.use("/rather/students/",studentsRoutes)

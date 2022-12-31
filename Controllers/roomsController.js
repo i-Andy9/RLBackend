@@ -42,7 +42,12 @@ const addRooms = async (req,res)=>{
             msg: "Aula registrada correctamente",
             code: 201,
             status: "creado",
-            Aula: roomSave,
+            Aula:  {
+                "code": roomSave.code,
+                "name": roomSave.name,
+                "details": roomSave.details,
+                "list": roomSave.list,
+            },
         })
         
     } catch (error) {

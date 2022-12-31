@@ -22,10 +22,10 @@ const addAdmin = async ( req,res)=>{
             }); 
         }
 
-        const {rut,password,jwt,actsesion} = req.body;
+        const {mail,password,jwt,actsesion} = req.body;
 
         //prevent duplicate
-        const adminExist = await Admins.findOne({rut})
+        const adminExist = await Admins.findOne({mail})
 
         if(adminExist){
             const error = new Error("Admin ya esta registrado")
@@ -33,7 +33,7 @@ const addAdmin = async ( req,res)=>{
         }
 
         //add jwt 
-        req.body.jwt= genJWT(rut) 
+        req.body.jwt= genJWT(mail) 
 
          const  admin = new Admins(req.body)
         const adminsave = await admin.save()
@@ -56,9 +56,9 @@ const addAdmin = async ( req,res)=>{
 const deleteAdmin = async (req,res)=>{
     try {
         
-        const { rut } = req.params 
+        const { mail } = req.params 
 
-        if ([null, undefined].includes(rut) || rut.length <7 ) {
+        if ([null, undefined].includes(mail) || mail.length <7 ) {
         
             return res.status(400).json({ 
                 msg: "Sintaxis no valida", 
@@ -66,10 +66,10 @@ const deleteAdmin = async (req,res)=>{
             }); 
         }
 
-        const adminExist = await Admins.findOne({rut})
+        const adminExist = await Admins.findOne({mail})
 
         if(!adminExist){
-            const error = new Error(`No se han encontrados usuarios con el rut ${rut} `)
+            const error = new Error(`No se han encontrados usuarios con el mail ${mail} `)
             return res.status(400).json({msg: error.message})
         } 
 
@@ -80,9 +80,9 @@ const deleteAdmin = async (req,res)=>{
     }
 }
 const signInAdmin = async (req,res)=>{  
-    const {rut } = req.admin
+    const {mail } = req.admin
 console.log( req.admin);
-    const adminToUpdate = await Admins.findOne({rut}).select(' -__v -password -jwt')
+    const adminToUpdate = await Admins.findOne({mail}).select(' -__v -password -jwt')
      
     adminToUpdate.actsesion= true
 
@@ -93,15 +93,15 @@ console.log( req.admin);
     return res.status(200).json({
         msg:`Se ha iniciado sesion correctamente`,
         adminSave:{
-            rut: adminSave.rut,
+            mail: adminSave.mail,
             actSesion:adminSave.actsesion
         }
     })
 }
 const loadOutAdmin = async (req,res)=>{  
-    const {rut } = req.admin
+    const {mail } = req.admin
 
-    const adminToUpdate = await Admins.findOne({rut}).select(" -__v -password -jwt ")
+    const adminToUpdate = await Admins.findOne({mail}).select(" -__v -password -jwt ")
      
     adminToUpdate.actsesion= false
 
@@ -111,7 +111,7 @@ const loadOutAdmin = async (req,res)=>{
     return res.status(200).json({
         msg:`Se ha cerrado sesion correctamente`,
         adminSave:{
-            rut: adminSave.rut,
+            mail: adminSave.mail,
             actSesion:adminSave.actsesion
         }
     })
