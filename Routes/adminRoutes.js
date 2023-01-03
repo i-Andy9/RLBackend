@@ -17,12 +17,12 @@ adminRoutes
 
 adminRoutes
     .route("/")
-    .get(checkAuth,CheckSesion,getAdmins)
+    .get(getAdmins)
     .post(checkAuth,CheckSesion,addAdmin)
     .delete(checkAuth,CheckSesion,deleteAdmin);
 adminRoutes
     .route("/login")
-    .post(checkAuth,signInAdmin)
+    .post(signInAdmin)
 adminRoutes
     .route("/loadout")
     .post(checkAuth,loadOutAdmin)

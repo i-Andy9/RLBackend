@@ -75,33 +75,46 @@ const deleteAdmin = async (req,res)=>{
 
         const {password,jwt,actsesion} = req.body;
 
+        await Admins.findByIdAndDelete(adminExist._id)
+
+        return res.status(200).json({ 
+            msg: `Se ha eliminado correctamente el registro con codigo ${code}`,
+        })
     } catch (error) {
         res.send({msg:error.message})
     }
 }
 const signInAdmin = async (req,res)=>{  
-    const {mail } = req.admin
-console.log( req.admin);
-    const adminToUpdate = await Admins.findOne({mail}).select(' -__v -password -jwt')
+    const {mail,password } = req.body 
+    const adminToUpdate = await Admins.findOne({mail}).select(' -__v  ')
      
+    if(!adminToUpdate){
+        const error = new Error(`No se han encontrados usuarios con el mail ${mail} `)
+        return res.status(400).json({msg: error.message,code:'Mail no valido'})
+    } 
+     
+    if(adminToUpdate.password !== password){
+        const error = new Error(`Error de contraseña`)
+        return res.status(400).json({msg: error.message,code:'Contraseña Incorrecta'})
+    }
+
     adminToUpdate.actsesion= true
 
     const adminSave = await adminToUpdate.save() 
-
-    delete adminSave._id
 
     return res.status(200).json({
         msg:`Se ha iniciado sesion correctamente`,
         adminSave:{
             mail: adminSave.mail,
-            actSesion:adminSave.actsesion
+            actSesion:adminSave.actsesion,
+            token: adminSave.jwt
         }
     })
 }
 const loadOutAdmin = async (req,res)=>{  
     const {mail } = req.admin
 
-    const adminToUpdate = await Admins.findOne({mail}).select(" -__v -password -jwt ")
+    const adminToUpdate = await Admins.findOne({mail}).select(" -__v -password ")
      
     adminToUpdate.actsesion= false
 

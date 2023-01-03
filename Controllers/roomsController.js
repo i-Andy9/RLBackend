@@ -32,7 +32,7 @@ const addRooms = async (req,res)=>{
         if(roomExists) {
             const error = new Error("Aula ya registrada")
             
-            return res.status(400).json({msg:error.message})
+            return res.status(400).json({msg:error.message,code:400})
         }
         
         const Room = new Rooms(req.body)
@@ -113,7 +113,7 @@ const editRoom =async (req,res)=>{
 
         if(!roomExist){
             return res.status(404).json({msg: `Error, no se ha encontrado
-             regstros de la aula con codigo ${code}`})
+             regstros de la aula con codigo ${code}`,code:404})
         }
 
         roomExist.name= name || roomExist.name 
@@ -141,7 +141,8 @@ const deleteRoom = async (req,res)=>{
         
         res.status(400).json({ 
             msg: "Sintaxis no valida", 
-            status: "bad request" });
+            status: "bad request",
+            code:400 });
             return
         }
 
@@ -149,7 +150,8 @@ const deleteRoom = async (req,res)=>{
 
         if(!roomExist){
             return res.status(404).json({
-                msg:` Error, no se han encontrado aulas con el codigo ${code}`
+                msg:` Error, no se han encontrado aulas con el codigo ${code}`,
+                code:404
             }) 
         }
 
@@ -157,6 +159,7 @@ const deleteRoom = async (req,res)=>{
 
         return res.status(200).json({ 
             msg: `Se ha eliminado correctamente el registro con codigo ${code}`,
+            code:200
         })
     } catch (error) {
         res.send({ msg: `${error.message}` });

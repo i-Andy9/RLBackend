@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import Admins from "../Models/adminModel.js";
 
 export const checkAuth = async (req, res, next) => { 
-  let token 
+  let token  
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
